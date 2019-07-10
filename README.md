@@ -52,7 +52,7 @@ if (narrowArrayElement(isNumber)(subject.a1)) {
 
 ```
 
-Problems, however, arise if you need to narrow down specific property types in an array elemet.
+Problems, however, arise if you need to narrow down specific property types in an array element.
 
 ```typescript
 type Subject = {
@@ -65,7 +65,7 @@ let subject: Subject; // class instance that we got somwhere
 
 // this does not work...
 if (isNumber(subject.a1[0].b2)) {
-    //... because guarding on a single element of array
+    //...because guarding on a single element of array
     // does not guard us against the rest if them.
     const narrow: number = subject.a1[1].b2;
 }
