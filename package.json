@@ -1,7 +1,7 @@
 {
   "name": "ts-narrow-prop-types-of-array-elements",
   "version": "0.0.1",
-  "description": "Typescript - narrow types of properties of array elements like you would with non-array types. I.E. safely go from {a: (number|string)[], b: bool} to { a: number[], b: bool}.",
+  "description": "Typescript - narrow types of properties of array elements like you would with non-array types.",
   "main": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
   "scripts": {
