@@ -14,9 +14,11 @@ const isNumber = (i: string | number | undefined): i is number => typeof i === '
 
 let subject: Subject; // class instance that we got somwhere
 
-const w: number = subject.a1; // error, type is to wide to be assigned into variable of type number; 
+// error, type is to wide to be assigned into variable of type number
+const w: number = subject.a1; 
 if (isNumber(subject.a1)) {
-    const narrow: number = subject.a1; // success, we only get inside if 'a1' passed the type guard 'isNumber', and compile is content
+    // success, we only get inside if 'a1' passed the type guard 'isNumber', and compile is content
+    const narrow: number = subject.a1; 
 }
 
 // you could even go deeper
@@ -123,7 +125,8 @@ type VehiclesOrder = {
 //Check property presence for electric engine
 const isElectricEngine = (i: EngineSystem) i is ElectricEngineSystem => 'chargerVoltage' in i;
 
-//Use tagged union for options https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
+//Use tagged union for options 
+//https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
 const isFridgeOption = (i: VehicleOption) i is FridgeOption => i.kind === 'FridgeOption';
 
 //Since these days we 99% of time deal with electric vehicles and only fridges are still optional, 
