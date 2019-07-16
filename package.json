@@ -1,7 +1,7 @@
 {
-  "name": "ts-narrow-prop-types-of-array-elements",
-  "version": "0.0.1",
-  "description": "Typescript - narrow types of properties of array elements like you would with non-array types.",
+  "name": "ts-typing-util",
+  "version": "0.0.2",
+  "description": "Typescript - utilities that help you use mapped types and polymorphism and typscript. Work in progress.",
   "main": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IKoshelev/ts-narrow-prop-type-guard"
+    "url": "https://github.com/IKoshelev/ts-typing-util"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",

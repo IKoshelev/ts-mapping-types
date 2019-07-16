@@ -1,14 +1,15 @@
 import * as mocha from 'mocha';
-import { narrowArrayElemProp, narrowArrayElement } from "../src/index";
+import { narrowArrayElemProp, narrowArrayElement, genericNarrow } from "../src/NarrowPropTypes";
 import { expect } from "chai";
 
 type Subject = {
     a1: {
-        b1: (number | string)[],
-        b2: number | string,
-        control: string     
-    }[],
-    control: string
+        b1: (number | string)[];
+        b2: number | string;
+        control: string;     
+    }[];
+    a2: number | string;
+    control: string;
 }
 
 const controlMarker = 'controll-marker';
@@ -107,6 +108,30 @@ describe('narrowArrayElemProp + narrowArrayElement', () => {
         } else {
             const control: string = subject.control;   // this line checks that compiler has not narrowed type of control to number
             expect(control).to.equal(controlMarker);
+        }
+    });
+});
+
+
+describe('genericNarrow', () => {
+
+    it('lets you map multiple properties at once', () => {
+        const subject = getFreshSubject();
+
+        type NarrowedSubject = {
+            a1:{
+                b1: number[],
+                b2: number,
+            }[],
+            a2: number,
+        };
+
+        if(genericNarrow<typeof subject, NarrowedSubject>(subject, (i) => true)){
+            const n1: number[] = subject.a1[0].b1;
+            const n2: number = subject.a1[0].b2;
+            const n3: number = subject.a2;
+            // this test only tests compiler (you will get compilation errors if it fails)
+            expect(true).to.equal(true);
         }
     });
 });
