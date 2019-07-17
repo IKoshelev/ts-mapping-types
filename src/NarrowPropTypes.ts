@@ -1,5 +1,6 @@
 import { PartialDeep } from "./MappedDeepTypes";
 import { ElementType } from "./ElementType";
+import { NonComplexType } from "./NonComplexType";
 
 export type NarrowPropTypeByKey<TTarget,
     TKey extends keyof TTarget,
@@ -39,16 +40,19 @@ export type OverridePropTypes<TOriginal, TOverrides> = {
         ?
             //unconditional override
             TOverrides[key] extends SetType<infer TNewType> ? TNewType :
-            //overides has array for this key - apply array element from override to array element of otiginal
-            //todo tuples may cause problems?
-            TOverrides[key] extends readonly object[] ? readonly OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] :
+
+            //types not expected to have their own properties
+            TOverrides[key] extends NonComplexType ?  TOverrides[key] :       
+            TOverrides[key] extends readonly NonComplexType[] ? TOverrides[key]:
+
+            //apply array element from override to array element of otiginal (recursive )
+            //todo tuples will cause problems?
             TOverrides[key] extends object[] ? OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] :
-            //overides has array of primitives for type (since object[] was captured by previous type)         
-            TOverrides[key] extends readonly unknown[] ? TOverrides[key]:
-            //overrides has object for this array - apply recursively
-            TOverrides[key] extends object ? OverridePropTypes<TOriginal[key], TOverrides[key]> :
-            //override is primitive - use it
-            TOverrides[key]
+            TOverrides[key] extends readonly object[] ? readonly OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] :     
+            
+            //overrides has complex type for this key - apply recursively
+            OverridePropTypes<TOriginal[key], TOverrides[key]>
+
         //key not found in overrides
         :TOriginal[key];   
 }

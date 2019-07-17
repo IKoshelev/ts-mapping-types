@@ -1,5 +1,6 @@
 import { PartialDeep } from "./MappedDeepTypes";
 import { ElementType } from "./ElementType";
+import { NonComplexType } from "./NonComplexType";
 export declare type NarrowPropTypeByKey<TTarget, TKey extends keyof TTarget, TNarrow extends TTarget[TKey]> = {
     [key in keyof TTarget]: key extends TKey ? TNarrow extends TTarget[key] ? TNarrow : TTarget[key] : TTarget[key];
 };
@@ -9,7 +10,7 @@ export declare type SetType<T> = {
     __36d95b8851d0__to: T;
 };
 export declare type OverridePropTypes<TOriginal, TOverrides> = {
-    [key in keyof TOriginal]: key extends keyof TOverrides ? TOverrides[key] extends SetType<infer TNewType> ? TNewType : TOverrides[key] extends readonly object[] ? readonly OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] : TOverrides[key] extends object[] ? OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] : TOverrides[key] extends readonly unknown[] ? TOverrides[key] : TOverrides[key] extends object ? OverridePropTypes<TOriginal[key], TOverrides[key]> : TOverrides[key] : TOriginal[key];
+    [key in keyof TOriginal]: key extends keyof TOverrides ? TOverrides[key] extends SetType<infer TNewType> ? TNewType : TOverrides[key] extends NonComplexType ? TOverrides[key] : TOverrides[key] extends readonly NonComplexType[] ? TOverrides[key] : TOverrides[key] extends object[] ? OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] : TOverrides[key] extends readonly object[] ? readonly OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] : OverridePropTypes<TOriginal[key], TOverrides[key]> : TOriginal[key];
 };
 export declare type NarrowPropTypes<TOriginal, TOverrides extends PartialDeep<TOriginal>> = OverridePropTypes<TOriginal, TOverrides>;
 export declare function genericNarrow<TOriginal, TOverrides extends PartialDeep<TOriginal>>(inst: TOriginal, check: (i: TOriginal) => boolean): inst is TOriginal & NarrowPropTypes<TOriginal, TOverrides>;

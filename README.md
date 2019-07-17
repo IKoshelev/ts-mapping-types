@@ -1,4 +1,6 @@
-# ts-narrow-prop-types-of-array-elements
+# ts-typing-util
+
+Readme in progress.
 
 This is an extension on Type Guards ( https://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types ).
 
