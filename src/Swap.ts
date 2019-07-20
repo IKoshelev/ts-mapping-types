@@ -1,4 +1,4 @@
-type SwappableKeys<T, TKey1 extends keyof T> = Exclude<{
+export type SwappableKeys<T, TKey1 extends keyof T> = Exclude<{
     [key in keyof T]:
     /**/ T[key] extends T[TKey1]
     /**/ ? T[TKey1] extends T[key]
@@ -31,7 +31,7 @@ type SwappableKeys<T, TKey1 extends keyof T> = Exclude<{
  * swap(t, 'd','f'); //error
  * swap(t, 'd','g'); //error
  **/
-function swap<T, TKey1 extends keyof T>(inst: T, key1: TKey1, key2: SwappableKeys<T, TKey1>): void {
+export function swap<T, TKey1 extends keyof T>(inst: T, key1: TKey1, key2: SwappableKeys<T, TKey1>): void {
 
     const buff = inst[key1] as any;
     inst[key1] = inst[key2] as any;
