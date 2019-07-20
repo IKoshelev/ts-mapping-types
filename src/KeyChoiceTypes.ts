@@ -1,6 +1,5 @@
 import { MakeProp } from "./MakePropType";
 
-
 /**
  * Union type of all values of a given key.
  * @example
@@ -17,7 +16,6 @@ import { MakeProp } from "./MakePropType";
  * 
  * // 'sqr' | 'cir'
  * type AllValuesOfKind = AllValuesOfSubKey<Before, 'kind'>;
- * 
  * */
 type AllValuesOfSubKey<T, TSubKey> = {
     [key in keyof T]: TSubKey extends keyof T[key] ? T[key][TSubKey] : never;
@@ -43,7 +41,6 @@ type AllValuesOfSubKey<T, TSubKey> = {
  * //     radius: number;
  * // }
  * type matchVal = ValueWhereTSubKey<Before, 'kind', 'sqr'>;
- * 
  * */
 type ValueWhereTSubKey<T, TSubKey, TTypeToMatch> = {
     [key in keyof T]: 
@@ -69,7 +66,6 @@ type ValueWhereTSubKey<T, TSubKey, TTypeToMatch> = {
  * 
  * // 'square'
  * type matchKey = KeyWhereTSubKey<Before, 'kind', 'sqr'>;
- * 
  * */
 type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
     [key in keyof T]: 
@@ -105,7 +101,6 @@ type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
  * //     originalKey: 'circle'; 
  * // }
  * type Rotated = RotateSubKey<Before, 'kind', 'originalKey'>;
- * 
  * */
 export type RotateSubKey<T, TSubKey, TOriginalKeyNewName extends string = 'originalKey'> = {
     [key in AllValuesOfSubKey<T, TSubKey> & (string | string)] 

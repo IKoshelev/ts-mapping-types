@@ -4,7 +4,6 @@
  * type equivalent = {
  *      TKey: TType
  * }
- * 
  */
 
 export type MakeProp<TKey extends string , TType> = Pick<{
