@@ -1,6 +1,7 @@
 import { MakeProp } from "./MakePropType";
 /**
  * Union type of all values of a given key.
+ * @example
  * type Before = {
  *  square: {
  *       kind: 'sqr';
@@ -20,6 +21,7 @@ declare type AllValuesOfSubKey<T, TSubKey> = {
 }[keyof T];
 /**
  * Choose type where subkey matches certain type
+ * @example
  * type Before = {
  *  square: {
  *       kind: 'sqr';
@@ -42,6 +44,7 @@ declare type ValueWhereTSubKey<T, TSubKey, TTypeToMatch> = {
 }[keyof T];
 /**
  * Choose key where subkey matches certain type
+ * @example
  * type Before = {
  *  square: {
  *       kind: 'sqr';
@@ -61,6 +64,7 @@ declare type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
 }[keyof T];
 /**
  * Switch original key with one of the subkeys, preserving original in a prop.
+ * @example
  * type Before = {
  *  square: {
  *       kind: 'sqr';

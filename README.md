@@ -1,7 +1,12 @@
 # ts-typing-util
 
-Readme in progress.
+Typescript types and utility functions utilizing more advanced aspects of the typing system. 
 
+Available via NPM:
+
+`npm install ts-typing-util`
+
+## Guarding individual properties nested 
 This is an extension on Type Guards ( https://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types ).
 
 Normally, type-guards work just fine with properties of your type:
@@ -149,9 +154,7 @@ if(narrowArrayElemProp(order.items, 'engineSystem', isElectricEngine)
 }
 ```
 
-Available via NPM:
 
-`npm install ts-narrow-prop-types-of-array-elements`
 
 
 
