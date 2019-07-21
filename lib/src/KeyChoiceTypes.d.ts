@@ -4,7 +4,7 @@ import { MakeProp } from "./MakePropType";
  * @example
  * type Before = {
  *  square: {
- *       kind: 'sqr';
+ *      kind: 'sqr';
  *      side: number;
  *    },
  *    circle: {
@@ -23,8 +23,8 @@ declare type AllValuesOfSubKey<T, TSubKey> = {
  * Choose type where subkey matches certain type
  * @example
  * type Before = {
- *  square: {
- *       kind: 'sqr';
+ *    square: {
+ *      kind: 'sqr';
  *      side: number;
  *    },
  *    circle: {
@@ -68,19 +68,19 @@ declare type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
  * type Before = {
  *  square: {
  *       kind: 'sqr';
- *      side: number;
+ *       side: number;
  *    },
- *    circle: {
- *        kind: 'cir';
- *        radius: number;
+ *  circle: {
+ *       kind: 'cir';
+ *       radius: number;
  *    }
  * }
  *
  * // {
  * // sqr: {
- * //   kind: 'sqr';
- * //   side: number;
- * //   originalKey: 'square';
+ * //     kind: 'sqr';
+ * //     side: number;
+ * //     originalKey: 'square';
  * // },
  * // cir: {
  * //     kind: 'cir';
@@ -90,6 +90,6 @@ declare type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
  * type Rotated = RotateSubKey<Before, 'kind', 'originalKey'>;
  * */
 export declare type RotateSubKey<T, TSubKey, TOriginalKeyNewName extends string = 'originalKey'> = {
-    [key in AllValuesOfSubKey<T, TSubKey> & (string | string)]: ValueWhereTSubKey<T, TSubKey, key> & MakeProp<TOriginalKeyNewName, KeyWhereTSubKey<T, TSubKey, key>>;
+    [key in AllValuesOfSubKey<T, TSubKey> & (string | number | symbol)]: ValueWhereTSubKey<T, TSubKey, key> & MakeProp<TOriginalKeyNewName, KeyWhereTSubKey<T, TSubKey, key>>;
 };
 export {};
