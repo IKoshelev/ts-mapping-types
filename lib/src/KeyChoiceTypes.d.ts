@@ -89,6 +89,6 @@ export declare type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
  * // }
  * type Rotated = RotateSubKey<Before, 'kind', 'originalKey'>;
  * */
-export declare type RotateSubKey<T, TSubKey, TOriginalKeyNewName extends string = 'originalKey'> = {
+export declare type RotateSubKey<T, TSubKey, TOriginalKeyNewName extends string = never> = {
     [key in AllValuesOfSubKey<T, TSubKey> & (string | number | symbol)]: ValueWhereTSubKey<T, TSubKey, key> & MakeProp<TOriginalKeyNewName, KeyWhereTSubKey<T, TSubKey, key>>;
 };
