@@ -17,7 +17,7 @@ import { MakeProp } from "./MakePropType";
  * // 'sqr' | 'cir'
  * type AllValuesOfKind = AllValuesOfSubKey<Before, 'kind'>;
  * */
-type AllValuesOfSubKey<T, TSubKey> = {
+export type AllValuesOfSubKey<T, TSubKey> = {
     [key in keyof T]: TSubKey extends keyof T[key] ? T[key][TSubKey] : never;
 }[keyof T];
 
@@ -41,7 +41,7 @@ type AllValuesOfSubKey<T, TSubKey> = {
  * // }
  * type matchVal = ValueWhereTSubKey<Before, 'kind', 'sqr'>;
  * */
-type ValueWhereTSubKey<T, TSubKey, TTypeToMatch> = {
+export type ValueWhereTSubKey<T, TSubKey, TTypeToMatch> = {
     [key in keyof T]: 
         TSubKey extends keyof T[key] ? T[key][TSubKey] extends TTypeToMatch ?  T[key]
         : never
@@ -65,7 +65,7 @@ type ValueWhereTSubKey<T, TSubKey, TTypeToMatch> = {
  * // 'square'
  * type matchKey = KeyWhereTSubKey<Before, 'kind', 'sqr'>;
  * */
-type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
+export type KeyWhereTSubKey<T, TSubKey, TTypeToMatch> = {
     [key in keyof T]: 
         TSubKey extends keyof T[key] ? T[key][TSubKey] extends TTypeToMatch ? key
         : never
