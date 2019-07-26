@@ -1,6 +1,6 @@
 {
   "name": "ts-typing-util",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Typescript - utilities that help you use mapped types and polymorphism in typscript.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
