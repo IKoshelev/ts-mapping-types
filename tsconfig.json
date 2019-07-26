@@ -63,6 +63,6 @@
   "include": [
     "./src/**/*",
     "./test/**/*",
-    "./index.ts"
+    "src/index.ts"
   ]
 }

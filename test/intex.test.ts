@@ -1,7 +1,6 @@
 import * as mocha from 'mocha';
-import { narrowArrayElemProp, narrowArrayElement, genericNarrow } from "..";
+import { narrowArrayElemProp, narrowArrayElement, genericNarrow } from "../src";
 import { expect } from "chai";
-import { swap } from '..';
 
 type Subject = {
     a1: {
@@ -25,7 +24,8 @@ const getFreshSubject = () => ({
 const isNumber = (i: string | number | undefined): i is number => typeof i === 'number';
 
 describe('narrowArrayElement', () => {
-    it('', () => {
+
+    it('can narrow type of array', () => {
         const subjects = [getFreshSubject()];
         subjects[0].a2 =  (8 as  string | number);
         if(narrowArrayElemProp(subjects, 'a2', isNumber)){
@@ -149,21 +149,5 @@ describe('genericNarrow', () => {
             // this test only tests compiler (you will get compilation errors if it fails)
             expect(true).to.equal(true);
         }
-    });
-});
-
-
-describe('swap', () => {
-
-    it('swaps props ar runtime', () => {
-        
-        const t = {
-            a: 1,
-            b: 2,
-        }
-            
-        swap(t, 'a', 'b');
-        expect(t.a).to.equal(2);
-        expect(t.b).to.equal(1);
     });
 });

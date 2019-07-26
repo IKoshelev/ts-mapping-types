@@ -37,7 +37,3 @@ type AddEachKeyToItsPropType<T> = {
 
 type B = AddEachKeyToItsPropType<A>;
 */
-
-
-  
-
