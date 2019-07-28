@@ -17,6 +17,21 @@ export function narrowArrayElement<TWide, TNarrow extends TWide>(check:(i: TWide
     return (i: TWide[]) : i is TNarrow[] => i.every(check); 
 }
 
+export function narrowPropType<
+    T, 
+    TKey extends keyof T, 
+    TNarrowedPropType extends T[TKey]>
+        (inst: T, key: TKey, guard: (wide:  T[TKey]) => wide is TNarrowedPropType): inst is NarrowPropTypeByKey<T, TKey, TNarrowedPropType> {
+    
+            const val = inst[key];
+
+    if(guard(val)) {
+        return true;
+    }
+
+    return false;
+}
+
 export function narrowArrayElemProp<
     TOuterArrElem,
     TKey extends  keyof TOuterArrElem,

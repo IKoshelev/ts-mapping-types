@@ -5,6 +5,7 @@ export declare type NarrowPropTypeByKey<TTarget, TKey extends keyof TTarget, TNa
     [key in keyof TTarget]: key extends TKey ? TNarrow extends TTarget[key] ? TNarrow : TTarget[key] : TTarget[key];
 };
 export declare function narrowArrayElement<TWide, TNarrow extends TWide>(check: (i: TWide) => i is TNarrow): (i: TWide[]) => i is TNarrow[];
+export declare function narrowPropType<T, TKey extends keyof T, TNarrowedPropType extends T[TKey]>(inst: T, key: TKey, guard: (wide: T[TKey]) => wide is TNarrowedPropType): inst is NarrowPropTypeByKey<T, TKey, TNarrowedPropType>;
 export declare function narrowArrayElemProp<TOuterArrElem, TKey extends keyof TOuterArrElem, TNarrowArr extends TOuterArrElem[TKey]>(arr: TOuterArrElem[], keyInElem: TKey, check: (i: TOuterArrElem[TKey]) => i is TNarrowArr): arr is NarrowPropTypeByKey<TOuterArrElem, TKey, TNarrowArr>[];
 export declare type SetType<T> = {
     __36d95b8851d0__to: T;

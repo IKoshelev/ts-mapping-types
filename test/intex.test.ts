@@ -1,5 +1,5 @@
 import * as mocha from 'mocha';
-import { narrowArrayElemProp, narrowArrayElement, genericNarrow } from "../src";
+import { narrowArrayElemProp, narrowArrayElement, genericNarrow, narrowPropType } from "../src";
 import { expect } from "chai";
 
 type Subject = {
@@ -24,15 +24,15 @@ const getFreshSubject = () => ({
 
 const isNumber = (i: string | number | undefined): i is number => typeof i === 'number';
 
-describe('narrowArrayElement', () => {
+describe('narrowPropType, narrowArrayElement', () => {
 
-    it('can narrow type of array', () => {
+    it('can narrow type of array and narrow a whole type', () => {
         const subject = getFreshSubject();
         subject.a3 =  [(8 as  string | number)];
-        if(narrowArrayElement(isNumber)(subject.a3)){
+        if(narrowPropType(subject, 'a3', narrowArrayElement(isNumber))){
             //success
             const narrow:number = subject.a3[0];
-            const narrowAssign = subject as { a3: number[] };
+            const narrowAssign: { a3: number[] } = subject;
             expect(narrow).to.equal(8);
             expect(narrowAssign).to.equal(subject);
         } else {
