@@ -17,6 +17,10 @@ export function narrowArrayElement<TWide, TNarrow extends TWide>(check:(i: TWide
     return (i: TWide[]) : i is TNarrow[] => i.every(check); 
 }
 
+// type guards, when used on object properties, don't narrow down the type of the whole object
+// https://github.com/microsoft/TypeScript/issues/32595
+// https://github.com/microsoft/TypeScript/issues/31755#issuecomment-498669080
+// so, this special guard is needed
 export function narrowPropType<
     T, 
     TKey extends keyof T, 
