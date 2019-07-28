@@ -9,6 +9,7 @@ type Subject = {
         control: string;     
     }[];
     a2: number | string;
+    a3: (number | string)[];
     control: string;
 }
 
@@ -26,12 +27,14 @@ const isNumber = (i: string | number | undefined): i is number => typeof i === '
 describe('narrowArrayElement', () => {
 
     it('can narrow type of array', () => {
-        const subjects = [getFreshSubject()];
-        subjects[0].a2 =  (8 as  string | number);
-        if(narrowArrayElemProp(subjects, 'a2', isNumber)){
+        const subject = getFreshSubject();
+        subject.a3 =  [(8 as  string | number)];
+        if(narrowArrayElement(isNumber)(subject.a3)){
             //success
-            const narrow:number = subjects[0].a2;
+            const narrow:number = subject.a3[0];
+            const narrowAssign = subject as { a3: number[] };
             expect(narrow).to.equal(8);
+            expect(narrowAssign).to.equal(subject);
         } else {
             throw new Error('Should not get here.');
         }
