@@ -154,3 +154,27 @@ describe('genericNarrow', () => {
         }
     });
 });
+
+
+describe('MapType + Patch', () => {
+
+    it('lets you map multiple properties at once', () => {
+        const subject = getFreshSubject();
+
+        type NarrowedSubject = {
+            a1:{
+                b1: number[],
+                b2: number,
+            }[],
+            a2: number,
+        };
+
+        if(genericNarrow<typeof subject, NarrowedSubject>(subject, (i) => true)){
+            const n1: number[] = subject.a1[0].b1;
+            const n2: number = subject.a1[0].b2;
+            const n3: number = subject.a2;
+            // this test only tests compiler (you will get compilation errors if it fails)
+            expect(true).to.equal(true);
+        }
+    });
+});

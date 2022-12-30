@@ -6,3 +6,4 @@ export * from './MappedDeepTypes';
 export * from './NarrowPropTypes';
 export * from './NonComplexType';
 export * from './Patch';
+export * from './KeysOfType';

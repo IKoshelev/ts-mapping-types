@@ -1,82 +1,79 @@
-import { Expand, ExpandDeep } from "./Expand"
+import { KeysOfType } from "./KeysOfType";
 
-
-type ReplaceType<T> = {
+/**
+ * Special marker type used with Patch
+ * */
+export type ReplaceType<T> = {
     marker: "__SpecialType:ReplaceType:c923872d6c75"
     value: T
 }
 
-type NewProp<T> = {
-    marker: "__SpecialType:NewProp:c923872d6c75"
+/**
+ * Special marker type used with Patch
+ * */
+export type AddProp<T> = {
+    marker: "__SpecialType:AddProp:c923872d6c75"
     value: T
 }
 
-type RemoveProp = {
+/**
+ * Special marker type used with Patch
+ * */
+export type RemoveProp = {
     marker: "__SpecialType:RemoveProp:c923872d6c75"
 }
 
-type MappingError = {
-    marker: "__SpecialType:MappingError:c923872d6c75"
+type SelectNewProps<TPatch> = {
+    [K in Exclude<keyof TPatch, KeysOfType<TPatch, RemoveProp> | KeysOfType<TPatch, ReplaceType<any>>>]:
+        // TPatch[K] extends ReplaceType<infer TReplaceType> ? unknown :
+        // TPatch[K] extends RemoveProp ? unknown : 
+        TPatch[K] extends AddProp<infer TReplaceType> ? TReplaceType : 
+        SelectNewProps<TPatch[K]>
 }
-
-type KeysToRemove<T> = {
-    [K in keyof T]: T[K] extends RemoveProp ? K: never;
-}[keyof T];
 
 /**
- * Equvalent to a type with a signle property with TKey name and TType type  
+ * Allows you to surgically change parts of type by adding properties,
+ * removing properties and changing property types 
  * @example
- * type equivalent = {
- *      TKey: TType;
- * }
- * // MakeProp<'foo', number>
- * type equivalent1 = {
- *      foo: number;
- * }
+ * type Person = {
+ *   name: string, 
+ *   surname: string,
+ *   pet: {
+ *       name: string,
+ *       age: number,
+ *       species: string,
+ *   },
+ *   employment: {
+ *       companyName: string,
+ *       position: string
+ *   }
+ *  }
+ *
+ * type PatchedPerson = Patch<Person, {
+ *   name: ReplaceType<string[]>,
+ *   pet: {
+ *       name: ReplaceType<string[]>,
+ *       favoriteSnack: AddProp<string>,
+ *   },
+ *   employment: RemoveProp,
+ *   favoriteNumber: AddProp<number>,
+ * }>;
+ * 
+ * // type PatchedPerson = {
+ * //    name: string[];
+ * //    surname: string;
+ * //    pet: {
+ * //        name: string[];
+ * //        age: number;
+ * //        species: string;
+ * //        favoriteSnack: string;
+ * //    };
+ * //    favoriteNumber: number;
+ * // }
  */
 export type Patch<TBase, TPatch> = {
-    [K in keyof Exclude<keyof TBase, KeysToRemove<TPatch>>]: K extends keyof TPatch ? 
+    [K in Exclude<keyof TBase, KeysOfType<TPatch, RemoveProp>>]: K extends keyof TPatch ? 
         TPatch[K] extends ReplaceType<infer TReplaceType> ? TReplaceType :
-        TPatch[K] extends never ? never : 
         Patch<TBase[K], TPatch[K]>
     : TBase[K]
-}
-
-
-type Person = {
-    name: string, 
-    surname: string,
-    pet: {
-        name: string,
-        age: number,
-        species: string,
-    },
-    employment: {
-        companyName: string,
-        position: string
-    }
-}
-
-type a = KeysToRemove<{
-    name: ReplaceType<string[]>,
-    pet: {
-        name: ReplaceType<string[]>,
-        favoriteSnack: NewProp<string>,
-    },
-    employment: RemoveProp,
-    favoriteNumber: NewProp<number>,
-}>;
-
-type p = Expand<keyof Person>;
-
-type b = Expand<Exclude<p, a>>;
-
-type PatchedPerson = ExpandDeep<Patch<Person, {
-    name: ReplaceType<string[]>,
-    pet: {
-        name: ReplaceType<string[]>,
-        favoriteSnack: NewProp<string>,
-    },
-    employment: RemoveProp,
-    favoriteNumber: NewProp<number>,
-}>>;
+} & SelectNewProps<TPatch>;
