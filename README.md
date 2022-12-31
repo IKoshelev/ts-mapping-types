@@ -1,6 +1,6 @@
 # ts-mapping-types
 
-Typescript types and utility functions utilizing more advanced aspects of the typing system. 
+Surgically change type, add or remove individual nested properties or mass-replace properties by signature.
 
 Available via NPM:
 
