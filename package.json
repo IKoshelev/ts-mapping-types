@@ -11,9 +11,10 @@
   },
   "author": "Ivan Koshelev",
   "license": "MIT",
+  "keywords": ["typescript", "mapping", "patch", "replace-types"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/IKoshelev/ts-mapping-util"
+    "url": "https://github.com/IKoshelev/ts-mapping-types"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
