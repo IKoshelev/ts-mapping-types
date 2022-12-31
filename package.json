@@ -5,7 +5,8 @@
   "main": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
   "scripts": {
-    "test": "mocha ./lib/test/**/*.js -w",
+    "test": "mocha ./lib/test/**/*.js",
+    "test:watch": "mocha ./lib/test/**/*.js -w",
     "test-debug": "mocha ./lib/test/**/*.js -w --inspect-brk",
     "lint": "tslint \" src/**/*.ts*\""
   },
