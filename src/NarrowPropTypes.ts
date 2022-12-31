@@ -64,7 +64,7 @@ export type OverridePropTypes<TOriginal, TOverrides> = {
             TOverrides[key] extends NonComplexType ?  TOverrides[key] :       
             TOverrides[key] extends readonly NonComplexType[] ? TOverrides[key]:
 
-            //apply array element from override to array element of otiginal (recursive )
+            //apply array element from override to array element of original (recursive )
             //todo tuples will cause problems?
             TOverrides[key] extends object[] ? OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] :
             TOverrides[key] extends readonly object[] ? readonly OverridePropTypes<ElementType<TOriginal[key]>, ElementType<TOverrides[key]>>[] :     

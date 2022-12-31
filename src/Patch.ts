@@ -21,10 +21,107 @@ export type RemoveProp = {
 }
 
 /**
- * Allows you to surgically change parts of type by adding properties,
- * removing properties and changing property types 
- * @example
- * 
+  Allows you to surgically change parts of type by adding properties,
+  removing properties and changing property types.
+  Use Prop<NewType> to add new property or change type of existing one.
+  Use RemoveProp to remove property. Besides these two special types,
+  all other properties of TPatch type must be either objects or arrays,
+  and will be used to determine path to changed sites. 
+  @example
+  ```
+  type Person = {
+      name: string,
+      surname: string,
+      pet: {
+          names: string[],
+          age: number,
+          species: string,
+          toys: {
+              model: string,
+              age: number
+          }[]
+      }[],
+      employment: {
+          companyName: string,
+          position: string
+      },
+  }
+  
+  type Replaced = 'Replaced';
+  type Added = 'Added';
+  
+  type PatchedPerson = ExpandDeep<Patch<Person, {
+      name: Prop<Replaced>,
+      pet: {
+          names: Prop<Replaced[]>,
+          favoriteSnack: Prop<Added>,
+          toys: {
+              model: RemoveProp,
+              age: Prop<Replaced>,
+              color: Prop<Added>
+          }[]
+      }[],
+      employment: RemoveProp,
+      favoriteNumber: Prop<Added>
+  }>>;
+  
+  // type PatchedPerson = {
+  //     name: "Replaced";
+  //     surname: string;
+  //     pet: {
+  //         names: "Replaced"[];
+  //         age: number;
+  //         species: string;
+  //         toys: {
+  //             age: "Replaced";
+  //             color: "Added";
+  //         }[];
+  //         favoriteSnack: "Added";
+  //     }[];
+  //     favoriteNumber: "Added";
+  // }
+  ```
+
+  Patch will notify you, if you are doing something wrong in the TPatch
+  @example
+  ```
+    type Person = {
+        name: string,
+        surname: string,
+        pet: {
+            names: string[],
+            age: number,
+            species: string,
+            toys: {
+                model: string,
+                age: number
+            }[]
+        }[],
+        employment: {
+            companyName: string,
+            position: string
+        },
+    }
+
+    type ErrorsTest = ExpandDeep<Patch<Person, {
+        name: {}[],
+        nonexistant1: {}[],
+        surname: {},
+        nonexistant2: {},
+        wrongType: number,
+
+        pet: RemoveProp,
+        employment: RemoveProp
+    }>>;
+
+    // type ErrorsTest = {
+    //     name: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE";
+    //     surname: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE";
+    //     nonexistant1: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE";
+    //     nonexistant2: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE";
+    //     wrongType: "ERROR:PATCH_TYPE_CONTAINS_PRIMITIVE_TYPE_THAT_IS_NOT_WRAPPED_IN_Prop<T>";
+    // }
+  ```
  */
 export type Patch<TBase, TPatch> = {
     [K in Exclude<keyof TBase, KeysOfType<TPatch, RemoveProp>> | Exclude<keyof TPatch, KeysOfType<TPatch, RemoveProp>>]: 
@@ -48,94 +145,3 @@ export type Patch<TBase, TPatch> = {
                 ? TBase[K]
                 : 'ERROR:PROPERTY_KEY_NOT_FOUND_IN_EITHER_BASE_TYPE_OR_PATCH_TYPE;THIS_BRANCH_SHOULD_NEVER_BE_REACHED;';
 };
-
-type Person = {
-    name: string,
-    surname: string,
-    pet: {
-        names: string[],
-        age: number,
-        species: string,
-        toys: {
-            model: string,
-            age: number
-        }[]
-    }[],
-    employment: {
-        companyName: string,
-        position: string
-    },
-}
-
-type Replaced = 'Replaced';
-type Added = 'Added';
-
-type PatchedPerson = ExpandDeep<Patch<Person, {
-    name: Prop<Replaced>,
-    pet: {
-        names: Prop<Replaced[]>,
-        favoriteSnack: Prop<Added>,
-        toys: {
-            model: RemoveProp,
-            age: Prop<Replaced>,
-            color: Prop<Added>
-        }[]
-    }[],
-    employment: RemoveProp,
-    favoriteNumber: Prop<Added>
-}>>;
-
-// type PatchedPerson = {
-//     name: "Replaced";
-//     surname: string;
-//     pet: {
-//         names: "Replaced"[];
-//         age: number;
-//         species: string;
-//         toys: {
-//             age: "Replaced";
-//             color: "Added";
-//         }[];
-//         favoriteSnack: "Added";
-//     }[];
-//     favoriteNumber: "Added";
-// }
-
-type ErrorsTest = ExpandDeep<Patch<Person, {
-    name: {}[],
-    nonexistant1: {}[],
-    surname: {},
-    nonexistant2: {},
-    wrongType: number,
-
-    pet: RemoveProp,
-    employment: RemoveProp
-}>>;
-
-// type ErrorsTest = {
-//     name: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE";
-//     surname: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE";
-//     nonexistant1: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE";
-//     nonexistant2: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE";
-//     wrongType: "ERROR:PATCH_TYPE_CONTAINS_PRIMITIVE_TYPE_THAT_IS_NOT_WRAPPED_IN_Prop<T>";
-// }
-
-
-
-
-type PatchedPerson2 = ExpandDeep<MergeDeep<Person, {
-    name: Replaced,
-    pet: {
-        names: Replaced[],
-        favoriteSnack: Added,
-        toys: {
-            model: never,
-            age: Replaced,
-            color: Added
-        }[]
-    }[],
-    employment: {
-        foobar: 5
-    },
-    favoriteNumber: Added
-}>>;

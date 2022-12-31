@@ -1,7 +1,7 @@
 {
-  "name": "ts-typing-util",
+  "name": "ts-mapping-types",
   "version": "0.0.11",
-  "description": "Typescript - utilities that help you use mapped types and polymorphism in typescript.",
+  "description": "Typescript - advanced mapping types",
   "main": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
   "scripts": {

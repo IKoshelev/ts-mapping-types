@@ -1,5 +1,5 @@
 /**
- * Equvalent to a type with a signle property with TKey name and TType type  
+ * Equivalent to a type with a single property with TKey name and TType type  
  * @example
  * type equivalent = {
  *      TKey: TType;
@@ -14,7 +14,7 @@ export type MakeProp<TKey extends string , TType> =  {
     [key in TKey]: TType
 }
 
-/*This lets you make new poperties from keys and types in your mapped types and generics
+/*This lets you make new properties from keys and types in your mapped types and generics
 Imagine you want to go from
 type A = {
   foo: {
