@@ -1,18 +1,13 @@
+import { ElementType } from "./ElementType";
+import { ExpandDeep } from "./Expand";
 import { KeysOfType } from "./KeysOfType";
 
-/**
- * Special marker type used with Patch
- * */
-export type ReplaceType<T> = {
-    marker: "__SpecialType:ReplaceType:c923872d6c75"
-    value: T
-}
 
 /**
  * Special marker type used with Patch
  * */
-export type AddProp<T> = {
-    marker: "__SpecialType:AddProp:c923872d6c75"
+export type Prop<T> = {
+    marker: "__SpecialType:Prop:c923872d6c75"
     value: T
 }
 
@@ -21,14 +16,6 @@ export type AddProp<T> = {
  * */
 export type RemoveProp = {
     marker: "__SpecialType:RemoveProp:c923872d6c75"
-}
-
-type SelectNewProps<TPatch> = {
-    [K in Exclude<keyof TPatch, KeysOfType<TPatch, RemoveProp> | KeysOfType<TPatch, ReplaceType<any>>>]:
-        // TPatch[K] extends ReplaceType<infer TReplaceType> ? unknown :
-        // TPatch[K] extends RemoveProp ? unknown : 
-        TPatch[K] extends AddProp<infer TReplaceType> ? TReplaceType : 
-        SelectNewProps<TPatch[K]>
 }
 
 /**
@@ -72,8 +59,70 @@ type SelectNewProps<TPatch> = {
  * // }
  */
 export type Patch<TBase, TPatch> = {
-    [K in Exclude<keyof TBase, KeysOfType<TPatch, RemoveProp>>]: K extends keyof TPatch ? 
-        TPatch[K] extends ReplaceType<infer TReplaceType> ? TReplaceType :
-        Patch<TBase[K], TPatch[K]>
-    : TBase[K]
-} & SelectNewProps<TPatch>;
+    [K in Exclude<keyof TBase, KeysOfType<TPatch, RemoveProp>> | Exclude<keyof TPatch, KeysOfType<TPatch, RemoveProp>>]: 
+        K extends keyof TPatch 
+            ? TPatch[K] extends Prop<infer TReplaceType> 
+                ? TReplaceType 
+                : TPatch[K] extends (infer UPatch)[] 
+                    ? K extends keyof TBase 
+                        ? TBase[K] extends (infer UBase)[] 
+                            ? Patch<UBase, UPatch>[] 
+                            : never
+                        : never
+                    : K extends keyof TBase 
+                        ? Patch<TBase[K], TPatch[K]> 
+                        : never
+            : K extends keyof TBase 
+                ? TBase[K]
+                : never;
+};
+
+ type Person = {
+       name: string, 
+       surname: string,
+       pet: {
+           name: string,
+           age: number,
+           species: string,
+       },
+       employment: {
+           companyName: string,
+           position: string
+       },
+       cars: {
+        model: string,
+        make: number,
+       }[]
+      }
+
+      type TypeReplaced = 'TypeReplaced';
+      type PropAdded = 'PropAdded';
+
+      type PersonPatch = {
+        name: Prop<TypeReplaced>,
+        pet: {
+            name: Prop<TypeReplaced>,
+            favoriteSnack: Prop<PropAdded>,
+        },
+        employment: RemoveProp,
+        favoriteNumber: Prop<PropAdded>,
+        cars: {
+            make: RemoveProp
+        }[]
+      };
+    
+      //type a = ExpandDeep<SelectNewProps<PersonPatch>>;
+      
+     type PatchedPerson = ExpandDeep<Patch<Person,PersonPatch >>;
+     
+     // type PatchedPerson = {
+     //    name: string[];
+     //    surname: string;
+     //    pet: {
+     //        name: string[];
+     //        age: number;
+     //        species: string;
+     //        favoriteSnack: string;
+     //    };
+     //    favoriteNumber: number;
+     // }
