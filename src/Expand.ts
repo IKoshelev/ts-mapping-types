@@ -1,3 +1,4 @@
+import { NonComplexType } from "./NonComplexType";
 
 /**
  * Expands generics and type manipulation operators into the final form
@@ -27,6 +28,7 @@ export type Expand<T> = T extends infer U
 /**
  * Same as Expand, but Deep
  * */
-export type ExpandDeep<T> = T extends object
-  ? T extends infer U ? { [K in keyof U]: ExpandDeep<U[K]> } : never
-  : T;
+export type ExpandDeep<T> = 
+    T extends NonComplexType ? T :
+    T extends (infer U)[] ? ExpandDeep<U>[] : 
+    T extends infer U ? { [K in keyof U]: ExpandDeep<U[K]> } : never;

@@ -1,6 +1,7 @@
+import { MergeDeep } from "type-fest/source/merge-deep";
+import { Primitive } from "type-fest/source/primitive";
 import { ExpandDeep } from "./Expand";
 import { KeysOfType } from "./KeysOfType";
-
 
 /**
  * Add new property or change existing property type.
@@ -32,64 +33,109 @@ export type Patch<TBase, TPatch> = {
                 ? TReplaceType 
                 : TPatch[K] extends (infer UPatch)[] 
                     ? K extends keyof TBase 
-                        ? TBase[K] extends (infer UBase)[] ? Patch<UBase, UPatch>[] 
-                        : never : never
-                    : K extends keyof TBase 
-                        ? Patch<TBase[K], TPatch[K]> 
-                        : never
+                        ? TBase[K] extends (infer UBase)[] 
+                            ? Patch<UBase, UPatch>[] 
+                            : `ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE` 
+                        : `ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE`
+                    : TPatch[K] extends object
+                        ?  K extends keyof TBase 
+                                ? TBase[K] extends object
+                                    ? Patch<TBase[K], TPatch[K]> 
+                                    : `ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE`
+                                : `ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE`
+                        : `ERROR:PATCH_TYPE_CONTAINS_PRIMITIVE_TYPE_THAT_IS_NOT_WRAPPED_IN_Prop<T>`
             : K extends keyof TBase 
                 ? TBase[K]
-                : never;
+                : 'ERROR:PROPERTY_KEY_NOT_FOUND_IN_EITHER_BASE_TYPE_OR_PATCH_TYPE;THIS_BRANCH_SHOULD_NEVER_BE_REACHED;';
 };
 
- type Person = {
-       name: string, 
-       surname: string,
-       pet: {
-           names: string[],
-           age: number,
-           species: string,
-           toys: {
+type Person = {
+    name: string,
+    surname: string,
+    pet: {
+        names: string[],
+        age: number,
+        species: string,
+        toys: {
             model: string,
             age: number
-           }[]
-       }[],
-       employment: {
-           companyName: string,
-           position: string
-       },
-      }
+        }[]
+    }[],
+    employment: {
+        companyName: string,
+        position: string
+    },
+}
 
-      type TypeReplaced = 'TypeReplaced';
-      type PropAdded = 'PropAdded';
+type Replaced = 'Replaced';
+type Added = 'Added';
 
-      type PersonPatch = {
-        name: Prop<TypeReplaced>,
-        pet: {
-            //names: Prop<TypeReplaced>[],
-            favoriteSnack: Prop<PropAdded>,
-            toys: {
-                model: RemoveProp,
-                age: Prop<TypeReplaced>,
-                color: Prop<PropAdded>
-            }[]
-        }[],
-        employment: RemoveProp,
-        favoriteNumber: Prop<PropAdded>,
-      };
-    
-      //type a = ExpandDeep<SelectNewProps<PersonPatch>>;
-      
-     type PatchedPerson = ExpandDeep<Patch<Person,PersonPatch >>;
-     
-     // type PatchedPerson = {
-     //    name: string[];
-     //    surname: string;
-     //    pet: {
-     //        name: string[];
-     //        age: number;
-     //        species: string;
-     //        favoriteSnack: string;
-     //    };
-     //    favoriteNumber: number;
-     // }
+type PatchedPerson = ExpandDeep<Patch<Person, {
+    name: Prop<Replaced>,
+    pet: {
+        names: Prop<Replaced[]>,
+        favoriteSnack: Prop<Added>,
+        toys: {
+            model: RemoveProp,
+            age: Prop<Replaced>,
+            color: Prop<Added>
+        }[]
+    }[],
+    employment: RemoveProp,
+    favoriteNumber: Prop<Added>
+}>>;
+
+// type PatchedPerson = {
+//     name: "Replaced";
+//     surname: string;
+//     pet: {
+//         names: "Replaced"[];
+//         age: number;
+//         species: string;
+//         toys: {
+//             age: "Replaced";
+//             color: "Added";
+//         }[];
+//         favoriteSnack: "Added";
+//     }[];
+//     favoriteNumber: "Added";
+// }
+
+type ErrorsTest = ExpandDeep<Patch<Person, {
+    name: {}[],
+    nonexistant1: {}[],
+    surname: {},
+    nonexistant2: {},
+    wrongType: number,
+
+    pet: RemoveProp,
+    employment: RemoveProp
+}>>;
+
+// type ErrorsTest = {
+//     name: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE";
+//     surname: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE";
+//     nonexistant1: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_ARRAY_IN_BASE_TYPE";
+//     nonexistant2: "ERROR:THIS_PROPERTY_IS_EXPECTED_TO_BE_AN_OBJECT_IN_BASE_TYPE";
+//     wrongType: "ERROR:PATCH_TYPE_CONTAINS_PRIMITIVE_TYPE_THAT_IS_NOT_WRAPPED_IN_Prop<T>";
+// }
+
+
+
+
+type PatchedPerson2 = ExpandDeep<MergeDeep<Person, {
+    name: Replaced,
+    pet: {
+        names: Replaced[],
+        favoriteSnack: Added,
+        toys: {
+            model: never,
+            age: Replaced,
+            color: Added
+        }[]
+    }[],
+    employment: {
+        foobar: 5
+    },
+    favoriteNumber: Added
+}>>;
