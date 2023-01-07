@@ -1,8 +1,9 @@
 {
   "name": "ts-mapping-types",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Typescript - advanced mapping types. Surgically change type, add or remove individual nested properties or mass-replace properties by signature.",
-  "main": "./lib/index.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
     "test": "mocha ./lib/test/**/*.js",
     "test:watch": "mocha ./lib/test/**/*.js -w",
